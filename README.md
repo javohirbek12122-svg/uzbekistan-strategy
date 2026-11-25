@@ -31,7 +31,7 @@ Bilet 023 topshirig‘i asosida tayyorlangan, to‘rtta jamoa uchun turnir ochko
 
 ## Local development
 1. Node.js 20 yoki undan yangi versiyani o‘rnating.
-2. `npm ci`
+2. `npm install`
 3. `npm test`
 4. `npm run dev`
 
