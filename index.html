@@ -432,7 +432,8 @@
       saveTimer=setTimeout(saveCloud,650);
     }
     async function saveCloud(){
-      if(!state.user || !state.tournamentId || !supabase || state.saving) return;
+      if(!state.user || !state.tournamentId || !supabase) return;
+      if(state.saving){clearTimeout(saveTimer);saveTimer=setTimeout(saveCloud,650);return;}
       state.saving=true;
       setSync('','Bulutga saqlanmoqda','O‘zgarishlar Supabase bazasiga yuborilmoqda…');
       try{
@@ -472,7 +473,7 @@
         let {data:teams,error:teamError}=await supabase.from('bilet023_teams').select('*').eq('tournament_id',tournament.id).order('sort_order');
         if(teamError) throw teamError;
         if(!teams || teams.length===0){
-          const payload=cloneTeams(SAMPLE).map(t=>({tournament_id:tournament.id,team_name:t.name,wins:t.wins,draws:t.draws,losses:t.losses,sort_order:t.sort_order}));
+          const payload=state.teams.map((t,i)=>({tournament_id:tournament.id,team_name:t.name||('Jamoa '+(i+1)),wins:clampInt(t.wins),draws:clampInt(t.draws),losses:clampInt(t.losses),sort_order:i+1}));
           const inserted=await supabase.from('bilet023_teams').insert(payload).select('*').order('sort_order');
           if(inserted.error) throw inserted.error;
           teams=inserted.data;
@@ -516,7 +517,7 @@
           setAuthMode('login');
         }else{
           closeAuth();
-          if(result.data.user){state.user=result.data.user;await loadCloud();}
+          if(result.data.user){state.user=result.data.user;}
           showToast('Hisob muvaffaqiyatli ulandi.');
         }
       }catch(error){showToast(error.message||'Kirishda xatolik yuz berdi.');}
