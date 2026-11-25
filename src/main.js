@@ -7,6 +7,7 @@ import { clampInt, pointsFor, gamesPlayed, rankTeams, validateTeams } from './sc
     const STORAGE_KEY = 'bilet023-turnir-v2';
     const AUDIT_KEY = 'bilet023-audit-v1';
     const RUBRIC_KEY = 'bilet023-expert-score-v1';
+    const userStorageKey = (key) => key + ':' + (state.user?.id || 'guest');
     const SAMPLE = [
       { id:'team-1', name:'Paxtakor', wins:2, draws:1, losses:0, sort_order:1 },
       { id:'team-2', name:'Nasaf', wins:2, draws:0, losses:1, sort_order:2 },
@@ -29,7 +30,7 @@ import { clampInt, pointsFor, gamesPlayed, rankTeams, validateTeams } from './sc
     function recordAudit(action,detail){
       const entry={id:crypto.randomUUID?crypto.randomUUID():String(Date.now()),action,detail:String(detail||''),at:new Date().toISOString(),actor:state.user?.email||'Mahalliy foydalanuvchi'};
       state.audit=[entry,...state.audit].slice(0,80);
-      try{localStorage.setItem(AUDIT_KEY,JSON.stringify(state.audit));}catch(_e){}
+      try{localStorage.setItem(userStorageKey(AUDIT_KEY),JSON.stringify(state.audit));}catch(_e){}
       renderAudit();
     }
     function renderMeta(){
@@ -78,19 +79,20 @@ import { clampInt, pointsFor, gamesPlayed, rankTeams, validateTeams } from './sc
       dot.className='status-dot'+(mode==='good'?' good':mode==='bad'?' bad':'');
     }
     function localSave(){
-      try{ localStorage.setItem(STORAGE_KEY,JSON.stringify({title:state.title,region:state.region,eventDate:state.eventDate,description:state.description,status:state.status,teams:state.teams,isSample:state.isSample})); }
+      try{ localStorage.setItem(userStorageKey(STORAGE_KEY),JSON.stringify({title:state.title,region:state.region,eventDate:state.eventDate,description:state.description,status:state.status,teams:state.teams,isSample:state.isSample})); }
       catch(error){ setSync('bad','Saqlash cheklangan','Brauzer xotirasiga yozib bo‘lmadi.'); }
     }
     function loadLocal(){
       try{
-        const saved=JSON.parse(localStorage.getItem(STORAGE_KEY)||'null');
+        const saved=JSON.parse(localStorage.getItem(userStorageKey(STORAGE_KEY))||'null');
         if(saved && Array.isArray(saved.teams) && saved.teams.length===4){
           state.title=typeof saved.title==='string'?saved.title:'Turnir jadvali';state.region=saved.region||'';state.eventDate=saved.eventDate||'';state.description=saved.description||'';state.status=saved.status||'draft';
           state.teams=saved.teams.map((t,i)=>({id:t.id||('local-'+i),name:String(t.name||('Jamoa '+(i+1))).slice(0,80),wins:clampInt(t.wins),draws:clampInt(t.draws),losses:clampInt(t.losses),sort_order:i+1}));
           state.isSample=!!saved.isSample;
         }
-      }catch(_error){ localStorage.removeItem(STORAGE_KEY); }
-      try{const rows=JSON.parse(localStorage.getItem(AUDIT_KEY)||'[]');if(Array.isArray(rows))state.audit=rows.slice(0,80);}catch(_e){}
+      }catch(_error){ localStorage.removeItem(userStorageKey(STORAGE_KEY)); }
+      if(!localStorage.getItem(userStorageKey(STORAGE_KEY))){state.title='Turnir jadvali';state.region='';state.eventDate='';state.description='';state.status='draft';state.teams=cloneTeams(SAMPLE);state.isSample=true;}
+      try{const rows=JSON.parse(localStorage.getItem(userStorageKey(AUDIT_KEY))||'[]');if(Array.isArray(rows))state.audit=rows.slice(0,80);}catch(_e){}
     }
     function render(){
       renderBoard(); renderStats(); renderLeaders(); renderTests(); renderMeta(); renderAudit();
@@ -383,10 +385,10 @@ import { clampInt, pointsFor, gamesPlayed, rankTeams, validateTeams } from './sc
         if(publicId){await loadPublic(publicId);return;}
         const authButton=document.getElementById('authButton');if(authButton){authButton.disabled=false;authButton.classList.remove('btn-disabled');authButton.textContent='Bulutga ulanish ↗';}
         const {data,error}=await supabase.auth.getSession();if(error)throw error;
-        if(data.session && data.session.user){state.user=data.session.user;await loadCloud();}
+        if(data.session && data.session.user){state.user=data.session.user;loadLocal();await loadCloud();}
         else setSync('','Qurilmada saqlanmoqda','Mehmon rejimi · bulut uchun hisobga kiring');
         supabase.auth.onAuthStateChange((event,session)=>{
-          if(event==='SIGNED_IN' && session?.user){state.user=session.user;loadCloud();}
+          if(event==='SIGNED_IN' && session?.user){state.user=session.user;loadLocal();loadCloud();}
           if(event==='SIGNED_OUT'){state.user=null;state.tournamentId=null;state.role='local_owner';state.isReadOnly=false;loadLocal();render();}
         });
       }catch(error){
