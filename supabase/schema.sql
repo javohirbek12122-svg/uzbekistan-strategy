@@ -384,7 +384,20 @@ $save_tournament$;
 revoke all on function public.bilet023_save_tournament(uuid,bigint,text,text,date,text,jsonb) from public,anon;
 grant execute on function public.bilet023_save_tournament(uuid,bigint,text,text,date,text,jsonb) to authenticated;
 
-grant select on public.bilet023_tournaments,public.bilet023_teams to anon,authenticated;
+revoke all on public.bilet023_tournaments from anon;
+grant select (id,title,region,event_date,description,status,published_at,revision,created_at,updated_at)
+  on public.bilet023_tournaments to anon;
+grant select on public.bilet023_teams to anon;
+grant select on public.bilet023_tournaments,public.bilet023_teams to authenticated;
+
+create or replace view public.bilet023_public_tournaments
+with (security_invoker = true)
+as
+select id,title,region,event_date,description,status,published_at,revision,created_at,updated_at
+from public.bilet023_tournaments
+where status = 'published';
+
+grant select on public.bilet023_public_tournaments to anon,authenticated;
 grant insert,update,delete on public.bilet023_tournaments,public.bilet023_teams to authenticated;
 grant select,insert,update,delete on public.bilet023_members to authenticated;
 grant select on public.bilet023_audit_log to authenticated;
