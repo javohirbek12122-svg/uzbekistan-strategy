@@ -1,0 +1,13 @@
+{
+  "name": "Turnir ochkolari jadvali — Bilet 023",
+  "short_name": "Turnir hisobi",
+  "lang": "uz",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f4f7fa",
+  "theme_color": "#101c2c",
+  "icons": [
+    { "src": "./icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
