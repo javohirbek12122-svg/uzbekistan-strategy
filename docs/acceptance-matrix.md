@@ -1,6 +1,6 @@
 # Bilet 023 — qabul qilish va ekspert mezonlari matritsasi
 
-Ushbu ro‘yxat foydalanuvchi yuborgan ekspert baholash varaqasidagi 6 mezon va 19 ko‘rsatkichga mos tuzildi. Maksimal ballar yig‘indisi 100.
+Ushbu ro‘yxat foydalanuvchi yuborgan ekspert baholash varaqasidagi 6 mezon va 21 ko‘rsatkichga mos tuzildi. Maksimal ballar yig‘indisi 100.
 
 | Kod | Ko‘rsatkich | Maks. ball | Loyiha dalili |
 |---|---|---:|---|
@@ -23,7 +23,7 @@ Ushbu ro‘yxat foydalanuvchi yuborgan ekspert baholash varaqasidagi 6 mezon va 
 | 5.3 | Sinash va yaxshilash | 4 | Node test suite va CI |
 | 5.4 | Loyiha tartibi va topshirish | 4 | README, SQL, SECURITY, docs |
 | 6.1 | O‘ziga xos yondashuv | 4 | Teng o‘rin, audit va ommaviy read-only |
-| 6.2 | Foydali ijodiy yechim | 3 | 19 ko‘rsatkichli ekspert ballagichi |
+| 6.2 | Foydali ijodiy yechim | 3 | 21 ko‘rsatkichli ekspert ballagichi |
 | 6.3 | Mazmun va uslub uyg‘unligi | 3 | Rasmiy uslub va bir xil vizual tizim |
 
 ## Baholash tamoyili
