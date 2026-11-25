@@ -1,0 +1,3 @@
+Contact: mailto:security@bilet023.example
+Preferred-Languages: uz, ru, en
+Policy: https://github.com/javohirbek12122-svg/uzbekistan-strategy/blob/main/SECURITY.md
