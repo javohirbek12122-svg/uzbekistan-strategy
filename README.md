@@ -15,7 +15,7 @@ Bilet 023 topshirig‘i asosida tayyorlangan, to‘rtta jamoa uchun turnir ochko
 - O‘yinlar soni va ochkolarni avtomatik hisoblash.
 - Teng natijalarda teng o‘rin ko‘rsatish.
 - Mahalliy saqlash, CSV eksport, chop etish/PDF.
-- Ekspert baholash varaqasining 19 ta ko‘rsatkichi va 100 ballik hisoblagichi.
+- Ekspert baholash varaqasining 21 ta ko‘rsatkichi va 100 ballik hisoblagichi.
 - Draft / published holatlari va ommaviy read-only jadval havolasi.
 - Owner, admin, operator, auditor va viewer rollari uchun RLS modeli.
 - Server tomonidan yoziladigan, oddiy mijoz o‘zgartira olmaydigan audit jurnali.
