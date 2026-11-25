@@ -41,6 +41,14 @@ Cloud integration is intentionally disabled until a dedicated Supabase project i
 
 Never use a Supabase service-role key in browser environment variables.
 
+## Architecture, verification and release readiness
+- [System architecture](docs/architecture.md)
+- [Security and test results](docs/security-test-results.md)
+- [Public-sector readiness register](docs/readiness-register.md)
+- [Acceptance matrix](docs/acceptance-matrix.md)
+- [Operations](docs/operations.md)
+- [Privacy and data](docs/privacy-and-data.md)
+
 ## Database deployment
 Apply `supabase/schema.sql` only to a dedicated Bilet 023 Supabase project. Do not apply it to Yoshlar-Ishi, Parkent E-Market, or any unrelated production database.
 
