@@ -242,3 +242,8 @@
       #expert-scorecard .scorecard-summary{background:#fff;color:#111;border:1px solid #ddd}
       #expert-scorecard .scorecard-summary span{color:#555}
     }
+
+.skip-link{position:absolute;left:12px;top:10px;z-index:100;background:#fff;color:#142338;border:2px solid #4777d9;border-radius:9px;padding:10px 13px;font-size:12px;font-weight:800;transform:translateY(-160%);transition:transform .15s}
+.skip-link:focus{transform:translateY(0)}
+:focus-visible{outline:3px solid rgba(71,119,217,.45);outline-offset:3px}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
