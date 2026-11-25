@@ -4,187 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#101c2c">
-  <meta name="description" content="Bilet 023 — turnir jamoalari natijalarini aniq hisoblash, ochkolar bo‘yicha saralash va jadvalni boshqarish.">
-  <title>Turnir ochkolari jadvali — Bilet 023</title>
+  <meta name="color-scheme" content="light dark">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta name="description" content="Bilet 023 — sport musobaqalari uchun turnir jadvali, ochko hisoblash, ekspert baholash va nazorat jurnali.">
+  <title>Bilet 023 | Turnir boshqaruv platformasi</title>
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="icon" href="./icon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      color-scheme: light;
-      --ink:#172334; --muted:#778396; --line:#e8edf2; --paper:#ffffff;
-      --canvas:#f4f7fa; --navy:#101c2c; --navy-2:#172b41; --accent:#b7f36b;
-      --accent-dark:#426b1b; --blue:#4777d9; --blue-soft:#edf3ff;
-      --green:#16865b; --green-soft:#eaf8f1; --orange:#cc7b25; --orange-soft:#fff5e8;
-      --red:#c54c4c; --shadow:0 18px 54px rgba(27,44,65,.08);
-      --radius:22px;
-    }
-    *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
-    body{margin:0;background:var(--canvas);color:var(--ink);font-family:"DM Sans",system-ui,sans-serif;line-height:1.5}
-    button,input{font:inherit}
-    button{cursor:pointer}
-    button:focus-visible,input:focus-visible{outline:3px solid rgba(71,119,217,.26);outline-offset:2px}
-    .shell{width:min(1180px,calc(100% - 40px));margin:0 auto}
-    .topbar{height:76px;background:var(--navy);color:#fff;display:flex;align-items:center;position:relative;z-index:2}
-    .topbar-inner{display:flex;align-items:center;justify-content:space-between;gap:20px}
-    .brand{display:flex;gap:12px;align-items:center;text-decoration:none;color:white;min-width:0}
-    .brand-mark{width:40px;height:40px;display:grid;place-items:center;border-radius:13px;background:var(--accent);color:#152516;flex:none}
-    .brand-name{font:800 14px Manrope,sans-serif;letter-spacing:.11em}
-    .brand-sub{font-size:10px;color:#9eb1c5;letter-spacing:.15em;text-transform:uppercase;margin-top:1px}
-    .top-actions{display:flex;align-items:center;gap:10px}
-    .pill{border:1px solid rgba(255,255,255,.15);border-radius:99px;padding:7px 12px;font-size:11px;font-weight:700;letter-spacing:.08em;color:#c8d4df}
-    .pill b{color:var(--accent);font-weight:800}
-    .icon-btn{width:39px;height:39px;border:1px solid rgba(255,255,255,.15);color:white;background:rgba(255,255,255,.06);border-radius:12px;display:grid;place-items:center}
-    .icon-btn:hover{background:rgba(255,255,255,.13)}
-    .primary-btn,.secondary-btn,.ghost-btn{border:0;border-radius:12px;padding:11px 16px;font-weight:800;font-size:13px;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:transform .16s,background .16s}
-    .primary-btn{background:var(--accent);color:#152516;box-shadow:0 6px 16px rgba(183,243,107,.12)}
-    .primary-btn:hover{background:#c9ff83;transform:translateY(-1px)}
-    .secondary-btn{background:var(--navy);color:#fff}
-    .secondary-btn:hover{background:#20364e}
-    .ghost-btn{background:#f0f3f6;color:#33445a}
-    .ghost-btn:hover{background:#e6ebf1}
-    .hero{background:var(--navy);color:#fff;padding:46px 0 34px;position:relative;overflow:hidden}
-    .hero:before{content:"";position:absolute;width:550px;height:550px;right:-160px;top:-330px;border-radius:50%;border:1px solid rgba(183,243,107,.12);box-shadow:0 0 0 45px rgba(183,243,107,.025),0 0 0 95px rgba(183,243,107,.02)}
-    .hero:after{content:"";position:absolute;width:360px;height:360px;right:13%;bottom:-310px;border-radius:50%;background:rgba(183,243,107,.09);filter:blur(50px)}
-    .hero-inner{position:relative;z-index:1}
-    .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:800;color:var(--accent)}
-    .eyebrow-dot{width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 5px rgba(183,243,107,.13)}
-    .hero-grid{display:grid;grid-template-columns:1.45fr .75fr;gap:30px;align-items:end;margin-top:16px}
-    h1{font:800 clamp(30px,4vw,48px)/1.09 Manrope,sans-serif;letter-spacing:-.045em;margin:0;max-width:670px}
-    .hero-copy{color:#b6c4d3;font-size:14px;max-width:590px;margin:17px 0 0;line-height:1.75}
-    .hero-note{padding:18px 20px;border:1px solid rgba(255,255,255,.14);border-radius:18px;background:rgba(255,255,255,.055);backdrop-filter:blur(8px)}
-    .hero-note strong{display:block;color:white;font:800 13px Manrope,sans-serif;margin-bottom:6px}
-    .hero-note p{margin:0;color:#aab9c8;font-size:12px;line-height:1.65}
-    .workspace{padding:26px 0 58px}
-    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-top:-1px}
-    .stat{background:var(--paper);border:1px solid var(--line);border-radius:17px;padding:17px 18px;box-shadow:0 6px 18px rgba(27,44,65,.025)}
-    .stat-label{font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.04em}
-    .stat-value{font:800 26px Manrope,sans-serif;letter-spacing:-.04em;margin-top:6px}
-    .stat-foot{font-size:10px;color:#97a2b1;margin-top:2px}
-    .main-grid{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(275px,.75fr);gap:18px;margin-top:20px;align-items:start}
-    .panel{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
-    .panel-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;padding:22px 22px 17px;border-bottom:1px solid var(--line)}
-    .panel-title{font:800 17px Manrope,sans-serif;letter-spacing:-.025em;margin:0}
-    .panel-sub{font-size:11px;color:var(--muted);margin:5px 0 0}
-    .tiny-tag{background:#eff8e7;color:#466d20;border-radius:99px;padding:6px 9px;font-size:10px;font-weight:800;white-space:nowrap}
-    .table-wrap{overflow-x:auto}
-    table{width:100%;border-collapse:collapse;min-width:620px}
-    th{text-align:left;padding:13px 11px;background:#f8fafb;color:#8a96a5;font-size:10px;text-transform:uppercase;letter-spacing:.08em;font-weight:800;white-space:nowrap}
-    th:first-child,td:first-child{padding-left:22px}
-    td{padding:13px 11px;border-top:1px solid #edf1f4;font-size:12px;white-space:nowrap}
-    tr:first-child td{border-top:0}
-    tbody tr:hover{background:#fbfcfd}
-    .rank-cell{font:800 14px Manrope,sans-serif;color:#8793a2;width:44px}
-    .rank-top{color:#b17a1c}
-    .team-cell{min-width:145px}
-    .team-input{width:100%;min-width:120px;padding:7px 9px;border:1px solid transparent;border-radius:8px;background:transparent;color:var(--ink);font-weight:800;font-size:12px}
-    .team-input:hover{border-color:#e2e8ef;background:#fff}
-    .number-input{width:46px;text-align:center;padding:7px 4px;border:1px solid #e8edf2;border-radius:8px;background:#fff;color:#334155;font-weight:700;font-size:12px}
-    .number-input:focus{border-color:#89a8e7}
-    .points{font:800 16px Manrope,sans-serif;color:var(--navy)}
-    .points-best{color:#477b21}
-    .table-foot{padding:14px 22px;display:flex;justify-content:space-between;align-items:center;gap:12px;border-top:1px solid var(--line);font-size:11px;color:var(--muted)}
-    .legend{display:flex;flex-wrap:wrap;gap:12px}
-    .legend span{display:inline-flex;align-items:center;gap:5px}
-    .legend i{width:7px;height:7px;border-radius:50%;display:inline-block}
-    .legend .g{background:#28976a}.legend .d{background:#df9b43}.legend .m{background:#d66b6b}
-    .side-stack{display:grid;gap:16px}
-    .side-panel{padding:20px}
-    .side-title{font:800 14px Manrope,sans-serif;margin:0}
-    .side-copy{font-size:11px;color:var(--muted);margin:5px 0 15px;line-height:1.6}
-    .leader-list{display:grid;gap:13px}
-    .leader{display:grid;grid-template-columns:27px minmax(0,1fr) 30px;gap:9px;align-items:center}
-    .leader-number{font:800 11px Manrope,sans-serif;color:#9aa5b2}
-    .leader-name{font-size:11px;font-weight:800;overflow:hidden;text-overflow:ellipsis}
-    .bar-track{height:6px;border-radius:99px;background:#edf1f4;margin-top:6px;overflow:hidden}
-    .bar-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,#8ed44d,#c3f17a);transition:width .25s}
-    .leader-points{text-align:right;font:800 13px Manrope,sans-serif}
-    .rule-card{background:#f7faF3;border:1px solid #e8f1de;border-radius:15px;padding:15px}
-    .formula{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin:11px 0}
-    .formula-chip{background:white;border:1px solid #e6eddf;border-radius:8px;padding:6px 9px;font-size:11px;font-weight:800}
-    .formula-eq{color:#8b9a7f;font-weight:800}
-    .rule-caption{font-size:10px;color:#7d8b73}
-    .side-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:13px}
-    .side-actions button{padding:10px 8px;font-size:11px}
-    .sync-card{padding:16px 18px;background:#fff;border:1px solid var(--line);border-radius:17px;display:flex;align-items:center;gap:12px}
-    .sync-icon{width:35px;height:35px;border-radius:11px;background:#edf3ff;color:#4777d9;display:grid;place-items:center;flex:none}
-    .sync-text{min-width:0;flex:1}
-    .sync-title{font-size:11px;font-weight:800}
-    .sync-desc{font-size:10px;color:var(--muted);margin-top:3px;overflow-wrap:anywhere}
-    .status-dot{width:8px;height:8px;border-radius:50%;background:#e2a34f;flex:none}
-    .status-dot.good{background:#27a36e}.status-dot.bad{background:#cf5b5b}
-    .section-block{margin-top:34px}
-    .section-heading{display:flex;justify-content:space-between;align-items:end;gap:16px;margin-bottom:14px}
-    .section-heading h2{font:800 20px Manrope,sans-serif;letter-spacing:-.035em;margin:0}
-    .section-heading p{font-size:11px;color:var(--muted);margin:5px 0 0}
-    .rubric-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-    .rubric-card{background:white;border:1px solid var(--line);border-radius:17px;padding:17px 18px}
-    .rubric-top{display:flex;justify-content:space-between;gap:8px;align-items:center}
-    .rubric-index{font:800 10px Manrope,sans-serif;color:#9ba6b3;letter-spacing:.1em}
-    .rubric-points{font:800 16px Manrope,sans-serif;color:#3d6420}
-    .rubric-card h3{font:800 12px Manrope,sans-serif;margin:8px 0 9px}
-    .rubric-card ul{padding-left:15px;margin:0;color:#778396;font-size:10px;line-height:1.8}
-    .check-panel{padding:20px 22px}
-    .check-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:13px}
-    .check-count{font-size:10px;color:#3b7b54;background:#edf8f0;border-radius:99px;padding:6px 9px;font-weight:800}
-    .check-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
-    .test-item{border:1px solid #e5efe7;background:#fbfefb;padding:11px 12px;border-radius:12px;min-width:0}
-    .test-result{font-size:10px;font-weight:800;color:#22764e;display:flex;align-items:center;gap:5px}
-    .test-description{font-size:10px;color:#7e8b98;margin-top:5px;line-height:1.45}
-    .footer{border-top:1px solid #e7edf2;padding:22px 0 34px;color:#8995a3;font-size:10px}
-    .footer-inner{display:flex;justify-content:space-between;gap:15px;align-items:center}
-    .footer strong{color:#4e5c6e}
-    .modal-backdrop{position:fixed;inset:0;background:rgba(9,17,28,.62);display:none;place-items:center;padding:18px;z-index:20}
-    .modal-backdrop.open{display:grid}
-    .modal{width:min(430px,100%);background:#fff;border-radius:22px;padding:24px;box-shadow:0 28px 100px rgba(0,0,0,.28);position:relative}
-    .modal-close{position:absolute;right:17px;top:17px;border:0;background:#f1f4f7;width:32px;height:32px;border-radius:10px;font-size:18px;color:#677386}
-    .modal h2{font:800 21px Manrope,sans-serif;margin:0 40px 7px 0;letter-spacing:-.03em}
-    .modal p{font-size:11px;color:var(--muted);line-height:1.6;margin:0 0 18px}
-    .field{display:grid;gap:6px;margin:12px 0}
-    .field label{font-size:10px;font-weight:800;color:#526176}
-    .field input{padding:12px;border:1px solid #dfe6ee;border-radius:11px;font-size:13px;width:100%}
-    .modal-actions{display:flex;gap:8px;margin-top:17px}
-    .modal-actions button{flex:1}
-    .auth-switch{border:0;background:none;color:#4777d9;font-size:11px;font-weight:800;padding:12px 0 0}
-    .toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,18px);background:#172638;color:#fff;padding:11px 16px;border-radius:12px;font-size:11px;font-weight:700;box-shadow:0 10px 30px rgba(0,0,0,.2);opacity:0;pointer-events:none;transition:all .2s;z-index:30;max-width:calc(100% - 30px);text-align:center}
-    .toast.show{opacity:1;transform:translate(-50%,0)}
-    .empty-note{padding:18px;color:var(--muted);font-size:11px}
-    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-    body.dark{color-scheme:dark;--ink:#e8eef5;--muted:#9aa9b9;--line:#263548;--paper:#172638;--canvas:#101b29;--shadow:0 18px 54px rgba(0,0,0,.18)}
-    body.dark .stat,body.dark .panel,body.dark .rubric-card,body.dark .sync-card,body.dark .modal{background:var(--paper);border-color:var(--line)}
-    body.dark th{background:#1d3044;color:#9dadbd} body.dark td{border-color:#27394d} body.dark tbody tr:hover{background:#1b2c3e}
-    body.dark .team-input{color:var(--ink)} body.dark .team-input:hover{background:#203449;border-color:#36506b}
-    body.dark .number-input{background:#122032;color:#e8eef5;border-color:#31445a}
-    body.dark .points{color:#e8eef5} body.dark .ghost-btn{background:#27384a;color:#e8eef5}
-    body.dark .formula-chip{background:#1a2c3d;color:#e8eef5;border-color:#34483b}
-    body.dark .rule-card{background:#1b2d2e;border-color:#385246} body.dark .test-item{background:#172e2a;border-color:#295442}
-    body.dark .modal-close{background:#26394c;color:#d5e1ec} body.dark .field input{background:#122032;color:#fff;border-color:#35485d}
-    body.dark .field label{color:#becbd8} body.dark .footer{border-color:#27394d}
-    @media(max-width:900px){.main-grid{grid-template-columns:1fr}.side-stack{grid-template-columns:1fr 1fr}.rubric-grid{grid-template-columns:repeat(2,1fr)}}
-    @media(max-width:620px){
-      .shell{width:min(100% - 26px,1180px)}.topbar{height:66px}.brand-mark{width:35px;height:35px}.brand-name{font-size:12px}.brand-sub{font-size:9px}
-      .pill{display:none}.top-actions{gap:7px}.top-actions .primary-btn{padding:9px 11px;font-size:11px}
-      .hero{padding:34px 0 26px}.hero-grid{grid-template-columns:1fr;gap:17px;margin-top:13px}.hero-note{padding:14px 16px}
-      .hero-copy{font-size:12px;margin-top:12px}.stats{grid-template-columns:repeat(2,1fr);gap:9px}.stat{padding:13px 14px}.stat-value{font-size:23px}
-      .workspace{padding-top:16px}.main-grid{gap:12px;margin-top:13px}.panel-head{padding:17px 16px 14px}.panel-title{font-size:15px}
-      td{padding:11px 8px} th{padding:11px 8px} th:first-child,td:first-child{padding-left:14px}.table-foot{padding:12px 15px;align-items:flex-start;flex-direction:column}
-      .side-stack{grid-template-columns:1fr}.side-panel{padding:17px}.section-block{margin-top:27px}.section-heading h2{font-size:18px}
-      .rubric-grid{grid-template-columns:1fr 1fr;gap:8px}.rubric-card{padding:14px}.rubric-card h3{font-size:11px}.rubric-card ul{font-size:9px}
-      .check-grid{grid-template-columns:1fr 1fr}.check-panel{padding:17px}
-      .footer-inner{flex-direction:column;align-items:flex-start}.section-heading{align-items:flex-start;flex-direction:column}
-    }
-    @media(max-width:390px){.rubric-grid{grid-template-columns:1fr}.top-actions .primary-btn{font-size:10px}.brand-sub{letter-spacing:.08em}}
-    @media print{
-      body{background:#fff;color:#111}.topbar,.top-actions,.hero-note,.side-actions,.sync-card,.footer,.modal-backdrop,.toast,.no-print{display:none!important}
-      .hero{padding:18px 0;background:#fff;color:#111}.hero:before,.hero:after{display:none}.eyebrow{color:#333}h1{font-size:26px}.hero-copy{color:#555}
-      .workspace{padding:0}.panel,.stat,.rubric-card{box-shadow:none;break-inside:avoid}.main-grid{grid-template-columns:1fr 260px}.rubric-grid{grid-template-columns:repeat(3,1fr)}
-      input{border:0!important;background:transparent!important;padding:0!important;color:#111!important}.team-input{font-weight:800}.number-input{width:28px}
-      .panel{border-color:#ddd}.points{color:#111}
-    }
-  </style>
+  <link rel="stylesheet" href="./src/style.css">
 </head>
 <body>
   <header class="topbar">
@@ -211,7 +40,7 @@
       <div class="hero-grid">
         <div>
           <h1>Turnir natijalari.<br>Hisob-kitob aniq.</h1>
-          <p class="hero-copy">To‘rtta jamoaning g‘alaba, durang va mag‘lubiyatini kiriting. Tizim ochkolarni o‘zi hisoblaydi, jadvalni saralaydi va teng natijalarni bir xil o‘rinda ko‘rsatadi.</p>
+          <p class="hero-copy">Sport musobaqalari uchun shaffof hisob-kitob, boshqariladigan natijalar, ekspert baholash va tekshiriladigan audit izi. Bilet 023 amaliy topshirig‘i asosida ishlab chiqilgan pilot platforma.</p>
         </div>
         <div class="hero-note">
           <strong>Turnir boshqaruv paneli</strong>
@@ -227,6 +56,31 @@
       <article class="stat"><div class="stat-label">ENG YUQORI OCHKO</div><div class="stat-value" id="statMax">7</div><div class="stat-foot">Yetakchi natija</div></article>
       <article class="stat"><div class="stat-label">JAMI OCHKO</div><div class="stat-value" id="statTotal">18</div><div class="stat-foot">Barcha jamoalar bo‘yicha</div></article>
       <article class="stat"><div class="stat-label">TENG NATIJALAR</div><div class="stat-value" id="statTies">0</div><div class="stat-foot">Bir xil ochkoli guruhlar</div></article>
+    </section>
+
+
+    <div class="public-banner" id="publicBanner">Ommaviy ko‘rish rejimi · Ushbu jadval faqat o‘qish uchun ochilgan</div>
+    <section class="panel gov-panel" aria-labelledby="competitionPanelTitle">
+      <div class="panel-head">
+        <div>
+          <div class="section-kicker">Rasmiy musobaqa kartasi</div>
+          <h2 class="panel-title" id="competitionPanelTitle">Musobaqa ma’lumotlari</h2>
+          <p class="panel-sub">Turnir identifikatsiyasi, hudud, sana va e’lon holati</p>
+        </div>
+        <div class="gov-status"><span id="recordStatus" class="draft">QORALAMA</span><span id="roleStatus">MEHMON</span></div>
+      </div>
+      <div class="metadata-grid">
+        <div class="meta-field"><label for="competitionName">MUSOBAQA NOMI</label><input id="competitionName" maxlength="120" value="Turnir jadvali" autocomplete="off"></div>
+        <div class="meta-field"><label for="competitionRegion">HUDUD / TUMAN</label><input id="competitionRegion" maxlength="120" placeholder="Masalan, Parkent tumani"></div>
+        <div class="meta-field"><label for="competitionDate">MUSOBAQA SANASI</label><input id="competitionDate" type="date"></div>
+        <div class="meta-field span-2"><label for="competitionDescription">QISQA IZOH / BAYON</label><input id="competitionDescription" maxlength="300" placeholder="Musobaqa maqsadi yoki qisqa tavsifi"></div>
+      </div>
+      <div class="gov-actions no-print">
+        <button class="secondary-btn" id="saveMetaBtn">Ma’lumotlarni saqlash</button>
+        <button class="primary-btn" id="publishBtn" disabled>Ommaga e’lon qilish</button>
+        <button class="ghost-btn" id="copyPublicBtn" disabled>Ommaviy havolani nusxalash</button>
+        <span class="gov-help" id="governanceHelp">Bulut bazasi ulanmagan · mahalliy sinov rejimi</span>
+      </div>
     </section>
 
     <section class="main-grid">
@@ -307,6 +161,92 @@
         <article class="rubric-card"><div class="rubric-top"><span class="rubric-index">06 · 6-MEZON</span><span class="rubric-points">10 ball</span></div><h3>O‘ziga xos va foydali yechim</h3><ul><li>Reyting va teng o‘rinlar</li><li>CSV va chop etish</li><li>Mazmun va dizayn uyg‘unligi</li></ul></article>
       </div>
     </section>
+
+
+    <section class="section-block" id="expert-scorecard">
+      <div class="section-heading">
+        <div><h2>Ekspert baholash varaqasi — to‘liq mezonlar</h2><p>Rasmdagi 19 ta ko‘rsatkich va 6 mezonning maksimal ballari saqlandi. Ballarni kiritib, jami natijani ko‘rish mumkin.</p></div>
+        <span class="tiny-tag">100 BALL</span>
+      </div>
+      <article class="panel check-panel">
+        <div class="scorecard-summary"><strong id="rubricTotal">0 / 100</strong><span>Joriy ekspert bahosi · qiymatlar ushbu qurilmada saqlanadi</span><span style="margin-left:auto" id="rubricPercent">0%</span></div>
+        <div class="table-wrap">
+          <table aria-label="Ekspert baholash varaqasi">
+            <thead><tr><th>№</th><th>Ko‘rsatkich</th><th>Maks. ball</th><th>Qo‘yilgan ball</th><th>Dalil / tekshiruv nuqtasi</th></tr></thead>
+            <tbody id="rubricRows">
+              <tr class="rubric-group-row"><td colspan="5">1-MEZON · TEXNIK SIFAT VA BARQARORLIK <span style="float:right">30 BALL</span></td></tr>
+              <tr><td class="criterion-code">1.1</td><td>Asosiy funksiyalar</td><td>10</td><td><input class="score-input" type="number" min="0" max="10" step="1" value="0" data-rubric="1.1" aria-label="1.1 ball"></td><td class="evidence">Jadval, ochko hisobi, saralash, eksport va saqlash.</td></tr>
+              <tr><td class="criterion-code">1.2</td><td>Barqarorlik va xato holatlari</td><td>8</td><td><input class="score-input" type="number" min="0" max="8" step="1" value="0" data-rubric="1.2" aria-label="1.2 ball"></td><td class="evidence">Xato kiritish, uzilish, tiklash va test natijalari.</td></tr>
+              <tr><td class="criterion-code">1.3</td><td>Ekranga moslashish</td><td>6</td><td><input class="score-input" type="number" min="0" max="6" step="1" value="0" data-rubric="1.3" aria-label="1.3 ball"></td><td class="evidence">Telefon, planshet, noutbuk va katta ekran.</td></tr>
+              <tr><td class="criterion-code">1.4</td><td>Tezlik va texnik ishlash</td><td>6</td><td><input class="score-input" type="number" min="0" max="6" step="1" value="0" data-rubric="1.4" aria-label="1.4 ball"></td><td class="evidence">Yuklanish, tarmoq sarfi, resurslar va kesh.</td></tr>
+              <tr class="rubric-group-row"><td colspan="5">2-MEZON · TOPSHIRIQ VA MAZMUN <span style="float:right">20 BALL</span></td></tr>
+              <tr><td class="criterion-code">2.1</td><td>Topshiriqqa moslik</td><td>5</td><td><input class="score-input" type="number" min="0" max="5" step="1" value="0" data-rubric="2.1" aria-label="2.1 ball"></td><td class="evidence">Aynan 4 jamoa; g‘alaba 3, durang 1, mag‘lubiyat 0.</td></tr>
+              <tr><td class="criterion-code">2.2</td><td>Mazmunning aniqligi</td><td>5</td><td><input class="score-input" type="number" min="0" max="5" step="1" value="0" data-rubric="2.2" aria-label="2.2 ball"></td><td class="evidence">Atamalar, formula va ko‘rsatmalar tushunarli.</td></tr>
+              <tr><td class="criterion-code">2.3</td><td>Amaliy foyda</td><td>5</td><td><input class="score-input" type="number" min="0" max="5" step="1" value="0" data-rubric="2.3" aria-label="2.3 ball"></td><td class="evidence">Natijani hisoblash, saqlash, ulashish va chop etish.</td></tr>
+              <tr><td class="criterion-code">2.4</td><td>Ma’lumotning izchilligi</td><td>5</td><td><input class="score-input" type="number" min="0" max="5" step="1" value="0" data-rubric="2.4" aria-label="2.4 ball"></td><td class="evidence">Jadval, reyting, statistika va eksport bir-biriga mos.</td></tr>
+              <tr class="rubric-group-row"><td colspan="5">3-MEZON · TUZILISH VA FOYDALANISH QULAYLIGI <span style="float:right">10 BALL</span></td></tr>
+              <tr><td class="criterion-code">3.1</td><td>Tuzilish va navigatsiya</td><td>4</td><td><input class="score-input" type="number" min="0" max="4" step="1" value="0" data-rubric="3.1" aria-label="3.1 ball"></td><td class="evidence">Mantiqiy bo‘limlar, aniq harakatlar va qaytish yo‘li.</td></tr>
+              <tr><td class="criterion-code">3.2</td><td>O‘qilish va qulaylik</td><td>3</td><td><input class="score-input" type="number" min="0" max="3" step="1" value="0" data-rubric="3.2" aria-label="3.2 ball"></td><td class="evidence">Kontrast, klaviatura, yorliqlar va mobil boshqaruv.</td></tr>
+              <tr><td class="criterion-code">3.3</td><td>Yaxlit ko‘rinish</td><td>3</td><td><input class="score-input" type="number" min="0" max="3" step="1" value="0" data-rubric="3.3" aria-label="3.3 ball"></td><td class="evidence">Bir xil vizual tizim, tipografika va holat belgilari.</td></tr>
+              <tr class="rubric-group-row"><td colspan="5">4-MEZON · YECHIMNI NAMOYISH QILISH <span style="float:right">10 BALL</span></td></tr>
+              <tr><td class="criterion-code">4.1</td><td>Muammo va yechim</td><td>4</td><td><input class="score-input" type="number" min="0" max="4" step="1" value="0" data-rubric="4.1" aria-label="4.1 ball"></td><td class="evidence">Muammo aniq qo‘yilgan, yechim natijasi isbotlangan.</td></tr>
+              <tr><td class="criterion-code">4.2</td><td>Amaliy namoyish</td><td>3</td><td><input class="score-input" type="number" min="0" max="3" step="1" value="0" data-rubric="4.2" aria-label="4.2 ball"></td><td class="evidence">Real kiritish, hisoblash va natijani ko‘rsatish.</td></tr>
+              <tr><td class="criterion-code">4.3</td><td>Savollarga javob</td><td>3</td><td><input class="score-input" type="number" min="0" max="3" step="1" value="0" data-rubric="4.3" aria-label="4.3 ball"></td><td class="evidence">Arxitektura, algoritm va cheklovlarni izohlash.</td></tr>
+              <tr class="rubric-group-row"><td colspan="5">5-MEZON · VOSITALAR VA LOYIHA BOSHQARUVI <span style="float:right">20 BALL</span></td></tr>
+              <tr><td class="criterion-code">5.1</td><td>Vosita va ish usulini tanlash</td><td>6</td><td><input class="score-input" type="number" min="0" max="6" step="1" value="0" data-rubric="5.1" aria-label="5.1 ball"></td><td class="evidence">Git, modular kod, ma’lumotlar bazasi va hosting yechimi.</td></tr>
+              <tr><td class="criterion-code">5.2</td><td>Moslashtirish va boshqarish</td><td>6</td><td><input class="score-input" type="number" min="0" max="6" step="1" value="0" data-rubric="5.2" aria-label="5.2 ball"></td><td class="evidence">Rollar, ruxsatlar, sozlamalar va operatsion boshqaruv.</td></tr>
+              <tr><td class="criterion-code">5.3</td><td>Sinash va yaxshilash</td><td>4</td><td><input class="score-input" type="number" min="0" max="4" step="1" value="0" data-rubric="5.3" aria-label="5.3 ball"></td><td class="evidence">Avtomatik testlar, regressiya va xatolarni tuzatish.</td></tr>
+              <tr><td class="criterion-code">5.4</td><td>Loyiha tartibi va topshirish</td><td>4</td><td><input class="score-input" type="number" min="0" max="4" step="1" value="0" data-rubric="5.4" aria-label="5.4 ball"></td><td class="evidence">README, qo‘llanma, migratsiya, xavfsizlik va topshirish.</td></tr>
+              <tr class="rubric-group-row"><td colspan="5">6-MEZON · IJODIY YECHIM VA USLUB <span style="float:right">10 BALL</span></td></tr>
+              <tr><td class="criterion-code">6.1</td><td>O‘ziga xos yondashuv</td><td>4</td><td><input class="score-input" type="number" min="0" max="4" step="1" value="0" data-rubric="6.1" aria-label="6.1 ball"></td><td class="evidence">Oddiy jadvaldan ortiqcha, lekin vazifaga mos yechim.</td></tr>
+              <tr><td class="criterion-code">6.2</td><td>Foydali ijodiy yechim</td><td>3</td><td><input class="score-input" type="number" min="0" max="3" step="1" value="0" data-rubric="6.2" aria-label="6.2 ball"></td><td class="evidence">Audit izi, ommaviy havola va ekspert varaqasi.</td></tr>
+              <tr><td class="criterion-code">6.3</td><td>Mazmun va uslub uyg‘unligi</td><td>3</td><td><input class="score-input" type="number" min="0" max="3" step="1" value="0" data-rubric="6.3" aria-label="6.3 ball"></td><td class="evidence">Rasmiy ohang, bir xil dizayn va aniq matnlar.</td></tr>
+            </tbody>
+            <tfoot><tr><td colspan="2"><strong>JAMI</strong></td><td><strong>100</strong></td><td class="score-total" id="rubricTotalCell">0</td><td><span id="rubricState">Hali baholanmagan</span></td></tr></tfoot>
+          </table>
+        </div>
+        <div class="gov-actions no-print" style="padding:15px 0 0">
+          <button class="ghost-btn" id="resetRubricBtn">Baholashni tozalash</button>
+          <button class="secondary-btn" id="printRubricBtn">Baholash varaqasini chop etish</button>
+          <span class="gov-help">Ekspert ballari serverga yuborilmaydi; faqat ushbu qurilmada saqlanadi.</span>
+        </div>
+      </article>
+    </section>
+
+
+    <section class="section-block">
+      <div class="section-heading"><div><h2>Institutsional boshqaruv</h2><p>Davlat tashkiloti pilotiga tayyorlash uchun rol, audit va e’lon jarayoni.</p></div><span class="tiny-tag">BOSHQARUV</span></div>
+      <div class="state-grid">
+        <article class="state-card">
+          <h3>Foydalanuvchi rollari</h3>
+          <p>Owner/Admin — boshqaruv; Operator — natija kiritish; Auditor — tarixni ko‘rish; Viewer — faqat ko‘rish. Rollar ma’lumotlar bazasida RLS bilan tekshiriladi.</p>
+          <form class="role-form no-print" id="memberForm">
+            <label class="meta-field"><span class="section-kicker">FOYDALANUVCHI UUID</span><input id="memberUserId" placeholder="Supabase Auth foydalanuvchi UUID" autocomplete="off"></label>
+            <label class="meta-field"><span class="section-kicker">ROL</span><select id="memberRole"><option value="operator">Operator</option><option value="admin">Administrator</option><option value="auditor">Auditor</option><option value="viewer">Faqat ko‘rish</option></select></label>
+            <button class="secondary-btn" type="submit" id="addMemberBtn" disabled>Rol biriktirish</button>
+          </form>
+          <div class="role-note" id="roleHelp">Bulut bazasi ulanmaguncha foydalanuvchi rollari sinov rejimida o‘chirilgan.</div>
+        </article>
+        <article class="state-card">
+          <h3>O‘zgartirishlar jurnali</h3>
+          <p>Jamoa natijalaridagi o‘zgarishlar mahalliy sinov jurnalida, bulut ulanganida esa server tomonidagi o‘zgarmas audit jadvalida qayd etiladi.</p>
+          <div class="audit-list" id="auditList"><div class="empty-note">Hozircha qaydlar yo‘q.</div></div>
+        </article>
+      </div>
+    </section>
+    <section class="section-block">
+      <div class="section-heading"><div><h2>Davlat tizimi uchun tayyorgarlik holati</h2><p>Amalga oshirilgan texnik nazorat va hali rasmiy tasdiq talab qiladigan yo‘nalishlar bir-biridan ajratilgan.</p></div><span class="tiny-tag">READINESS</span></div>
+      <div class="readiness-grid">
+        <article class="readiness-item"><span class="readiness-flag">✓ KODDA BOR</span><strong>Ruxsatlar va ma’lumotlarni ajratish</strong><p>Supabase RLS, owner/admin/operator/auditor/viewer rollari va loyiha bo‘yicha alohida jadvallar.</p></article>
+        <article class="readiness-item"><span class="readiness-flag">✓ KODDA BOR</span><strong>Audit izi</strong><p>Jamoa, turnir va rol o‘zgarishlari uchun server tomonidagi append-only audit jurnali.</p></article>
+        <article class="readiness-item"><span class="readiness-flag">✓ KODDA BOR</span><strong>Hisoblash aniqligi</strong><p>G‘alaba 3, durang 1, mag‘lubiyat 0; teng ochkolar teng o‘rinda.</p></article>
+        <article class="readiness-item"><span class="readiness-flag">✓ KODDA BOR</span><strong>CI va regressiya testlari</strong><p>Ochkolar, saralash, validatsiya va eksport mantiqi avtomatik tekshiriladi.</p></article>
+        <article class="readiness-item"><span class="readiness-flag pending">! PILOTDAN OLDIN</span><strong>Ma’lumotlar joylashuvi</strong><p>Davlat buyurtmachisi bilan hosting hududi, transchegaraviy uzatish va ma’lumotlar toifasi yuridik tekshiriladi.</p></article>
+        <article class="readiness-item"><span class="readiness-flag pending">! PILOTDAN OLDIN</span><strong>Mustaqil xavfsizlik auditi</strong><p>Pen-test, ASVS verifikatsiyasi, zaxira nusxadan tiklash va yuklama sinovi bajarilishi lozim.</p></article>
+      </div>
+      <div class="official-note"><strong>Rasmiy eslatma:</strong> bu loyiha davlat tizimiga joriy etish uchun texnik asos va pilot prototipdir. U hozircha davlat axborot tizimi sertifikati, mustaqil pentest xulosasi, WCAG muvofiqlik bayonoti yoki qonuniy ma’lumotlar joylashuvi tasdig‘iga ega deb da’vo qilmaydi.</div>
+    </section>
+
   </main>
 
   <footer class="footer">
@@ -326,284 +266,6 @@
   </div>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-  <script type="module">
-    const SUPABASE_URL = 'https://nnodsqnqsqrmzcycrmpr.supabase.co';
-    const SUPABASE_KEY = 'sb_publishable_5mpySLijuYl4HS5RMx14Wg_FfV_9ggN';
-    const STORAGE_KEY = 'bilet023-turnir-v1';
-    const SAMPLE = [
-      { id:'team-1', name:'Paxtakor', wins:2, draws:1, losses:0, sort_order:1 },
-      { id:'team-2', name:'Nasaf', wins:2, draws:0, losses:1, sort_order:2 },
-      { id:'team-3', name:'Neftchi', wins:1, draws:1, losses:1, sort_order:3 },
-      { id:'team-4', name:'Bunyodkor', wins:0, draws:1, losses:2, sort_order:4 }
-    ];
-    const state = { title:'Turnir jadvali', teams:cloneTeams(SAMPLE), tournamentId:null, user:null, cloudReady:false, authMode:'login', isSample:true, saving:false };
-    let supabase = null;
-    let saveTimer = null;
-    let toastTimer = null;
-
-    function cloneTeams(list){ return list.map(t => ({...t})); }
-    function esc(value){ return String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-    function clampInt(value){ const n = Number(value); if(!Number.isFinite(n)) return 0; return Math.min(999,Math.max(0,Math.trunc(n))); }
-    function points(t){ return clampInt(t.wins)*3 + clampInt(t.draws); }
-    function played(t){ return clampInt(t.wins)+clampInt(t.draws)+clampInt(t.losses); }
-    function ranked(){
-      const sorted = [...state.teams].sort((a,b) => points(b)-points(a) || (a.sort_order||0)-(b.sort_order||0));
-      let previous = null, rank = 0;
-      return sorted.map((team,index) => { const score=points(team); if(previous===null || score!==previous) rank=index+1; previous=score; return {...team,points:score,played:played(team),rank}; });
-    }
-    function showToast(message){ const el=document.getElementById('toast'); el.textContent=message; el.classList.add('show'); clearTimeout(toastTimer); toastTimer=setTimeout(()=>el.classList.remove('show'),2600); }
-    function setSync(mode,title,desc){
-      document.getElementById('syncTitle').textContent=title;
-      document.getElementById('syncDesc').textContent=desc;
-      const dot=document.getElementById('syncDot');
-      dot.className='status-dot'+(mode==='good'?' good':mode==='bad'?' bad':'');
-    }
-    function localSave(){
-      try{ localStorage.setItem(STORAGE_KEY,JSON.stringify({title:state.title,teams:state.teams,isSample:state.isSample})); }
-      catch(error){ setSync('bad','Saqlash cheklangan','Brauzer xotirasiga yozib bo‘lmadi.'); }
-    }
-    function loadLocal(){
-      try{
-        const saved=JSON.parse(localStorage.getItem(STORAGE_KEY)||'null');
-        if(saved && Array.isArray(saved.teams) && saved.teams.length===4){
-          state.title=typeof saved.title==='string'?saved.title:'Turnir jadvali';
-          state.teams=saved.teams.map((t,i)=>({id:t.id||('local-'+i),name:String(t.name||('Jamoa '+(i+1))).slice(0,80),wins:clampInt(t.wins),draws:clampInt(t.draws),losses:clampInt(t.losses),sort_order:i+1}));
-          state.isSample=!!saved.isSample;
-        }
-      }catch(_error){ localStorage.removeItem(STORAGE_KEY); }
-    }
-    function render(){
-      renderBoard(); renderStats(); renderLeaders(); renderTests();
-      localSave();
-    }
-    function renderBoard(){
-      const active=document.activeElement;
-      const focus=active && active.dataset && active.dataset.field ? {id:active.dataset.team,field:active.dataset.field,start:active.selectionStart,end:active.selectionEnd}:null;
-      const rows=ranked();
-      document.getElementById('teamRows').innerHTML=rows.map((t,index)=>{
-        const rankClass=t.rank===1?'rank-top':'';
-        return '<tr>'+
-          '<td class="rank-cell '+rankClass+'">'+String(t.rank).padStart(2,'0')+'</td>'+
-          '<td class="team-cell"><label class="sr-only" for="team-'+esc(t.id)+'">Jamoa nomi</label><input class="team-input" id="team-'+esc(t.id)+'" data-team="'+esc(t.id)+'" data-field="name" maxlength="80" value="'+esc(t.name)+'"></td>'+
-          '<td><span>'+t.played+'</span></td>'+
-          '<td><label class="sr-only">G‘alabalar</label><input class="number-input" type="number" inputmode="numeric" min="0" max="999" step="1" data-team="'+esc(t.id)+'" data-field="wins" value="'+t.wins+'"></td>'+
-          '<td><label class="sr-only">Duranglar</label><input class="number-input" type="number" inputmode="numeric" min="0" max="999" step="1" data-team="'+esc(t.id)+'" data-field="draws" value="'+t.draws+'"></td>'+
-          '<td><label class="sr-only">Mag‘lubiyatlar</label><input class="number-input" type="number" inputmode="numeric" min="0" max="999" step="1" data-team="'+esc(t.id)+'" data-field="losses" value="'+t.losses+'"></td>'+
-          '<td><span class="points '+(index===0?'points-best':'')+'">'+t.points+'</span></td>'+
-        '</tr>';
-      }).join('');
-      if(focus){ const next=document.querySelector('[data-team="'+CSS.escape(focus.id)+'"][data-field="'+CSS.escape(focus.field)+'"]'); if(next){next.focus(); if(typeof next.setSelectionRange==='function' && focus.start!==null) try{next.setSelectionRange(focus.start,focus.end)}catch(_e){}} }
-    }
-    function renderStats(){
-      const list=ranked(), max=list.length?list[0].points:0;
-      const uniqueGroups=new Map(); list.forEach(t=>uniqueGroups.set(t.points,(uniqueGroups.get(t.points)||0)+1));
-      const ties=[...uniqueGroups.values()].filter(v=>v>1).length;
-      document.getElementById('statTeams').textContent=state.teams.length;
-      document.getElementById('statMax').textContent=max;
-      document.getElementById('statTotal').textContent=list.reduce((sum,t)=>sum+t.points,0);
-      document.getElementById('statTies').textContent=ties;
-    }
-    function renderLeaders(){
-      const list=ranked(), max=Math.max(1,...list.map(t=>t.points));
-      document.getElementById('leaderList').innerHTML=list.map((t,i)=>
-        '<div class="leader"><span class="leader-number">'+String(t.rank).padStart(2,'0')+'</span><div><div class="leader-name">'+esc(t.name)+'</div><div class="bar-track"><div class="bar-fill" style="width:'+Math.round(t.points/max*100)+'%"></div></div></div><span class="leader-points">'+t.points+'</span></div>'
-      ).join('');
-    }
-    function renderTests(){
-      const checkTie=rankedFrom([{wins:2,draws:1,losses:0,sort_order:1},{wins:2,draws:1,losses:0,sort_order:2},{wins:1,draws:1,losses:0,sort_order:3},{wins:0,draws:0,losses:1,sort_order:4}]);
-      const tests=[
-        {ok:2*3+1===7,title:'2 g‘alaba + 1 durang = 7',desc:'Bilet 023 dagi majburiy hisoblash tekshiruvi.'},
-        {ok:rankedFrom([{wins:3,draws:0,losses:0},{wins:1,draws:1,losses:0},{wins:0,draws:1,losses:0}])[0].points===9,title:'Ochko kamayish bo‘yicha saralash',desc:'Eng yuqori ochko jadval boshida turadi.'},
-        {ok:checkTie[0].rank===1 && checkTie[1].rank===1,title:'Teng ochkoga teng o‘rin',desc:'Bir xil ochkoli jamoalar bir xil raqam oladi.'},
-        {ok:clampInt(-5)===0 && clampInt(4.9)===4,title:'Noto‘g‘ri sonlardan himoya',desc:'Manfiy va kasr natijalar qabul qilinmaydi.'}
-      ];
-      const passed=tests.filter(t=>t.ok).length;
-      document.getElementById('testCount').textContent=passed+' / '+tests.length+' tekshiruv muvaffaqiyatli';
-      document.getElementById('testGrid').innerHTML=tests.map(t=>'<div class="test-item"><div class="test-result">'+(t.ok?'✓':'!')+' '+(t.ok?'O‘TDI':'TEKSHIRISH KERAK')+'</div><div class="test-description"><strong>'+esc(t.title)+'</strong><br>'+esc(t.desc)+'</div></div>').join('');
-    }
-    function rankedFrom(list){
-      const sorted=[...list].sort((a,b)=>(b.wins*3+b.draws)-(a.wins*3+a.draws));
-      let prev=null,rank=0;
-      return sorted.map((t,i)=>{const p=t.wins*3+t.draws;if(prev===null||p!==prev)rank=i+1;prev=p;return {...t,points:p,rank};});
-    }
-    function scheduleCloudSave(){
-      if(!state.user || !state.tournamentId || !supabase) return;
-      clearTimeout(saveTimer);
-      saveTimer=setTimeout(saveCloud,650);
-    }
-    async function saveCloud(){
-      if(!state.user || !state.tournamentId || !supabase) return;
-      if(state.saving){clearTimeout(saveTimer);saveTimer=setTimeout(saveCloud,650);return;}
-      state.saving=true;
-      setSync('','Bulutga saqlanmoqda','O‘zgarishlar Supabase bazasiga yuborilmoqda…');
-      try{
-        const title=state.title.trim().length>=2?state.title.trim():'Turnir jadvali';
-        const tournamentUpdate=await supabase.from('bilet023_tournaments').update({title,updated_at:new Date().toISOString()}).eq('id',state.tournamentId);
-        if(tournamentUpdate.error) throw tournamentUpdate.error;
-        for(const team of state.teams){
-          const payload={team_name:team.name.trim()||'Nomsiz jamoa',wins:clampInt(team.wins),draws:clampInt(team.draws),losses:clampInt(team.losses),sort_order:team.sort_order,updated_at:new Date().toISOString()};
-          const result=team.id && !String(team.id).startsWith('team-') && !String(team.id).startsWith('local-')
-            ? await supabase.from('bilet023_teams').update(payload).eq('id',team.id)
-            : await supabase.from('bilet023_teams').insert({...payload,tournament_id:state.tournamentId}).select().single();
-          if(result.error) throw result.error;
-          if(result.data && result.data.id) team.id=result.data.id;
-        }
-        state.isSample=false;
-        localSave();
-        setSync('good','Bulut bilan sinxronlangan','Hisob: '+state.user.email);
-      }catch(error){
-        console.error('Cloud save failed',error);
-        setSync('bad','Bulutga saqlashda xato',error.message||'Ulanishni tekshiring.');
-        showToast('Bulutga saqlash amalga oshmadi. Qurilmadagi nusxa saqlandi.');
-      }finally{state.saving=false;}
-    }
-    async function loadCloud(){
-      if(!supabase || !state.user) return;
-      setSync('','Bulutdan yuklanmoqda','Shaxsiy turnir ma’lumotlari olinmoqda…');
-      try{
-        let {data:tournaments,error}=await supabase.from('bilet023_tournaments').select('id,title,updated_at').order('updated_at',{ascending:false}).limit(1);
-        if(error) throw error;
-        let tournament=tournaments && tournaments[0];
-        if(!tournament){
-          const created=await supabase.from('bilet023_tournaments').insert({owner_id:state.user.id,title:state.title}).select().single();
-          if(created.error) throw created.error;
-          tournament=created.data;
-        }
-        state.tournamentId=tournament.id; state.title=tournament.title||'Turnir jadvali';
-        let {data:teams,error:teamError}=await supabase.from('bilet023_teams').select('*').eq('tournament_id',tournament.id).order('sort_order');
-        if(teamError) throw teamError;
-        if(!teams || teams.length===0){
-          const payload=state.teams.map((t,i)=>({tournament_id:tournament.id,team_name:t.name||('Jamoa '+(i+1)),wins:clampInt(t.wins),draws:clampInt(t.draws),losses:clampInt(t.losses),sort_order:i+1}));
-          const inserted=await supabase.from('bilet023_teams').insert(payload).select('*').order('sort_order');
-          if(inserted.error) throw inserted.error;
-          teams=inserted.data;
-        }
-        state.teams=teams.slice(0,4).map(t=>({id:t.id,name:t.team_name,wins:clampInt(t.wins),draws:clampInt(t.draws),losses:clampInt(t.losses),sort_order:t.sort_order}));
-        if(state.teams.length!==4) throw new Error('Turnirda 4 ta jamoa bo‘lishi kerak. Supabase jadvalidagi jamoalar sonini tekshiring.');
-        state.isSample=false;
-        render();
-        setSync('good','Bulut bilan sinxronlangan','Hisob: '+state.user.email);
-        document.getElementById('authButton').textContent='Hisobdan chiqish ↗';
-      }catch(error){
-        console.error('Cloud load failed',error);
-        setSync('bad','Bulutdan yuklab bo‘lmadi',error.message||'Qurilmadagi ma’lumot saqlanadi.');
-        showToast('Bulut bilan ulanish xatosi: '+(error.message||'noma’lum xato'));
-      }
-    }
-    function openAuth(){document.getElementById('authModal').classList.add('open');document.getElementById('authEmail').focus();}
-    function closeAuth(){document.getElementById('authModal').classList.remove('open');}
-    function setAuthMode(mode){
-      state.authMode=mode;
-      const register=mode==='register';
-      document.getElementById('authTitle').textContent=register?'Yangi hisob yaratish':'Bulut bilan sinxronlash';
-      document.getElementById('authIntro').textContent=register?'Elektron pochta va parol orqali hisob yarating. E-mail tasdiqlashi yoqilgan bo‘lsa, pochtangizga kelgan havolani bosing.':'Hisobingizga kiring. Turnir ma’lumotlaringiz Supabase’da shaxsiy hisobingizga bog‘lab saqlanadi.';
-      document.getElementById('authSubmit').textContent=register?'Hisob yaratish':'Kirish';
-      document.getElementById('authSwitch').textContent=register?'Hisobim bor — kirish':'Yangi hisob yaratish';
-    }
-    async function handleAuth(event){
-      event.preventDefault();
-      if(!supabase){showToast('Bulut xizmati hozir ulanmagan. Mehmon rejimida davom etishingiz mumkin.');return;}
-      const email=document.getElementById('authEmail').value.trim();
-      const password=document.getElementById('authPassword').value;
-      const submit=document.getElementById('authSubmit');
-      submit.disabled=true;submit.textContent='Tekshirilmoqda…';
-      try{
-        const result=state.authMode==='register'
-          ? await supabase.auth.signUp({email,password})
-          : await supabase.auth.signInWithPassword({email,password});
-        if(result.error) throw result.error;
-        if(state.authMode==='register' && !result.data.session){
-          showToast('Hisob yaratildi. Elektron pochtangizni tasdiqlang, keyin tizimga kiring.');
-          setAuthMode('login');
-        }else{
-          closeAuth();
-          if(result.data.user){state.user=result.data.user;}
-          showToast('Hisob muvaffaqiyatli ulandi.');
-        }
-      }catch(error){showToast(error.message||'Kirishda xatolik yuz berdi.');}
-      finally{submit.disabled=false;submit.textContent=state.authMode==='register'?'Hisob yaratish':'Kirish';}
-    }
-    async function signOut(){
-      if(!supabase) return;
-      const {error}=await supabase.auth.signOut();
-      if(error){showToast(error.message);return;}
-      state.user=null;state.tournamentId=null;
-      loadLocal();render();
-      setSync('','Qurilmada saqlanmoqda','Mehmon rejimi · ma’lumotlar shu brauzerda');
-      document.getElementById('authButton').textContent='Bulutga ulanish ↗';
-      showToast('Hisobdan chiqildi. Qurilmadagi nusxa saqlanib qoldi.');
-    }
-    function handleChange(event){
-      const target=event.target;
-      if(!target.dataset || !target.dataset.field) return;
-      const team=state.teams.find(t=>String(t.id)===target.dataset.team);
-      if(!team) return;
-      const field=target.dataset.field;
-      if(field==='name') team.name=target.value.slice(0,80);
-      if(field==='wins'||field==='draws'||field==='losses') team[field]=clampInt(target.value);
-      state.isSample=false;
-      render();
-      scheduleCloudSave();
-      if(!state.user) setSync('','Qurilmada saqlanmoqda','O‘zgarishlar shu brauzerda avtomatik saqlandi.');
-    }
-    function resetTeams(clear){
-      if(!window.confirm(clear?'Barcha natijalarni nolga tushirasizmi?':'Namuna ma’lumotlariga qaytasizmi?')) return;
-      state.teams=clear?SAMPLE.map((t)=>({...t,wins:0,draws:0,losses:0})):cloneTeams(SAMPLE);
-      state.isSample=!clear;render();scheduleCloudSave();
-      showToast(clear?'Natijalar tozalandi.':'Namuna qayta tiklandi.');
-    }
-    function exportCsv(){
-      const rows=[['O‘rin','Jamoa','O‘yin','G‘alaba','Durang','Mag‘lubiyat','Ochko'],...ranked().map(t=>[t.rank,t.name,t.played,t.wins,t.draws,t.losses,t.points])];
-      const csv='\uFEFF'+rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(';')).join('\r\n');
-      const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8;'}));
-      const a=document.createElement('a');a.href=url;a.download='bilet-023-turnir-jadvali.csv';a.click();URL.revokeObjectURL(url);
-      showToast('Jadval CSV formatida yuklandi.');
-    }
-    function toggleTheme(){
-      document.body.classList.toggle('dark');
-      localStorage.setItem('bilet023-theme',document.body.classList.contains('dark')?'dark':'light');
-    }
-    function initEvents(){
-      document.getElementById('teamRows').addEventListener('change',handleChange);
-      document.getElementById('sampleBtn').addEventListener('click',()=>resetTeams(false));
-      document.getElementById('clearBtn').addEventListener('click',()=>resetTeams(true));
-      document.getElementById('csvBtn').addEventListener('click',exportCsv);
-      document.getElementById('printBtn').addEventListener('click',()=>window.print());
-      document.getElementById('themeBtn').addEventListener('click',toggleTheme);
-      document.getElementById('authButton').addEventListener('click',()=>state.user?signOut():openAuth());
-      document.getElementById('closeAuth').addEventListener('click',closeAuth);
-      document.getElementById('authModal').addEventListener('click',e=>{if(e.target.id==='authModal')closeAuth();});
-      document.getElementById('authSwitch').addEventListener('click',()=>setAuthMode(state.authMode==='register'?'login':'register'));
-      document.getElementById('authForm').addEventListener('submit',handleAuth);
-    }
-    async function initCloud(){
-      try{
-        const {createClient}=await import('https://esm.sh/@supabase/supabase-js@2.119.2');
-        supabase=createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
-        const {data}=await supabase.auth.getSession();
-        if(data.session && data.session.user){
-          state.user=data.session.user;
-          await loadCloud();
-        }else{
-          setSync('','Qurilmada saqlanmoqda','Mehmon rejimi · bulut uchun hisobga kiring');
-        }
-        supabase.auth.onAuthStateChange((event,session)=>{
-          if(event==='SIGNED_IN' && session?.user){state.user=session.user;loadCloud();}
-          if(event==='SIGNED_OUT'){state.user=null;state.tournamentId=null;loadLocal();render();}
-        });
-      }catch(error){
-        console.warn('Supabase SDK could not load; local mode remains available.',error);
-        supabase=null;
-        setSync('bad','Mehmon rejimi','Bulut moduli yuklanmadi. Qurilmada ishlash davom etadi.');
-      }
-    }
-    function init(){
-      if(localStorage.getItem('bilet023-theme')==='dark')document.body.classList.add('dark');
-      loadLocal();initEvents();render();
-      if('serviceWorker' in navigator) window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
-      initCloud();
-    }
-    init();
-  </script>
+  <script type="module" src="./src/main.js"></script>
 </body>
 </html>
