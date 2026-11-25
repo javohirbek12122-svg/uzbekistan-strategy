@@ -124,16 +124,21 @@ grant execute on function public.bilet023_can_audit(uuid) to authenticated;
 
 create or replace function public.bilet023_set_updated_at()
 returns trigger language plpgsql set search_path=public
-as $ begin new.updated_at=now(); return new; end; $;
+as $set_updated$
+begin
+  new.updated_at := now();
+  return new;
+end;
+$set_updated$;
 
 create or replace function public.bilet023_bump_revision()
 returns trigger language plpgsql set search_path=public
-as $
+as $bump_revision$
 begin
   new.revision := old.revision + 1;
   return new;
 end;
-$;
+$bump_revision$;
 
 drop trigger if exists bilet023_tournaments_revision on public.bilet023_tournaments;
 create trigger bilet023_tournaments_revision
@@ -243,7 +248,7 @@ returns jsonb
 language plpgsql
 security definer
 set search_path = public
-as $
+as $save_tournament$
 declare
   v_tournament public.bilet023_tournaments%rowtype;
   v_item jsonb;
@@ -383,8 +388,7 @@ comment on table public.bilet023_audit_log is 'Append-only server audit log; nor
 
   return jsonb_build_object('revision',v_revision,'teams',v_result);
 end;
-$;
-
+$save_tournament$;
 revoke all on function public.bilet023_save_tournament(uuid,bigint,text,text,date,text,jsonb) from public,anon;
 grant execute on function public.bilet023_save_tournament(uuid,bigint,text,text,date,text,jsonb) to authenticated;
 
