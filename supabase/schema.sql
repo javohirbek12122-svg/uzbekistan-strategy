@@ -82,7 +82,7 @@ create or replace function public.bilet023_can_edit(p_tournament_id uuid)
 returns boolean language sql stable security definer set search_path=public
 as $$
   select exists(select 1 from public.bilet023_tournaments t where t.id=p_tournament_id and t.owner_id=(select auth.uid()))
-  or exists(select 1 from public.bilet023_members m where m.tournament_id=p_tournament_id and m.user_id=(select auth.uid()) and m.role in ('admin','operator'));
+  or exists(select 1 from public.bilet023_members m join public.bilet023_tournaments t on t.id=m.tournament_id where m.tournament_id=p_tournament_id and m.user_id=(select auth.uid()) and (m.role='admin' or (m.role='operator' and t.status<>'published')));
 $$;
 
 create or replace function public.bilet023_can_manage(p_tournament_id uuid)
