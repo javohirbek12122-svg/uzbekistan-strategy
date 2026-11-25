@@ -14,7 +14,7 @@ import { clampInt, pointsFor, gamesPlayed, rankTeams, validateTeams } from './sc
       { id:'team-3', name:'Neftchi', wins:1, draws:1, losses:1, sort_order:3 },
       { id:'team-4', name:'Bunyodkor', wins:0, draws:1, losses:2, sort_order:4 }
     ];
-    const state = { title:'Turnir jadvali', region:'', eventDate:'', description:'', status:'draft', teams:cloneTeams(SAMPLE), tournamentId:null, user:null, role:'local_owner', isReadOnly:false, audit:[], cloudReady:false, authMode:'login', isSample:true, saving:false };
+    const state = { title:'Turnir jadvali', region:'', eventDate:'', description:'', status:'draft', revision:1, teams:cloneTeams(SAMPLE), tournamentId:null, user:null, role:'local_owner', isReadOnly:false, audit:[], cloudReady:false, authMode:'login', isSample:true, saving:false };
     let supabase = null;
     let saveTimer = null;
     let toastTimer = null;
@@ -79,19 +79,19 @@ import { clampInt, pointsFor, gamesPlayed, rankTeams, validateTeams } from './sc
       dot.className='status-dot'+(mode==='good'?' good':mode==='bad'?' bad':'');
     }
     function localSave(){
-      try{ localStorage.setItem(userStorageKey(STORAGE_KEY),JSON.stringify({title:state.title,region:state.region,eventDate:state.eventDate,description:state.description,status:state.status,teams:state.teams,isSample:state.isSample})); }
+      try{ localStorage.setItem(userStorageKey(STORAGE_KEY),JSON.stringify({title:state.title,region:state.region,eventDate:state.eventDate,description:state.description,status:state.status,revision:state.revision,teams:state.teams,isSample:state.isSample})); }
       catch(error){ setSync('bad','Saqlash cheklangan','Brauzer xotirasiga yozib bo‘lmadi.'); }
     }
     function loadLocal(){
       try{
         const saved=JSON.parse(localStorage.getItem(userStorageKey(STORAGE_KEY))||'null');
         if(saved && Array.isArray(saved.teams) && saved.teams.length===4){
-          state.title=typeof saved.title==='string'?saved.title:'Turnir jadvali';state.region=saved.region||'';state.eventDate=saved.eventDate||'';state.description=saved.description||'';state.status=saved.status||'draft';
-          state.teams=saved.teams.map((t,i)=>({id:t.id||('local-'+i),name:String(t.name||('Jamoa '+(i+1))).slice(0,80),wins:clampInt(t.wins),draws:clampInt(t.draws),losses:clampInt(t.losses),sort_order:i+1}));
+          state.title=typeof saved.title==='string'?saved.title:'Turnir jadvali';state.region=saved.region||'';state.eventDate=saved.eventDate||'';state.description=saved.description||'';state.status=saved.status||'draft';state.revision=Number(saved.revision)||1;
+          state.teams=saved.teams.map((t,i)=>({id:t.id||('local-'+i),name:String(t.name||('Jamoa '+(i+1))).slice(0,80),wins:clampInt(t.wins),draws:clampInt(t.draws),losses:clampInt(t.losses),sort_order:i+1,revision:Number(t.revision)||1}));
           state.isSample=!!saved.isSample;
         }
       }catch(_error){ localStorage.removeItem(userStorageKey(STORAGE_KEY)); }
-      if(!localStorage.getItem(userStorageKey(STORAGE_KEY))){state.title='Turnir jadvali';state.region='';state.eventDate='';state.description='';state.status='draft';state.teams=cloneTeams(SAMPLE);state.isSample=true;}
+      if(!localStorage.getItem(userStorageKey(STORAGE_KEY))){state.title='Turnir jadvali';state.region='';state.eventDate='';state.description='';state.status='draft';state.revision=1;state.teams=cloneTeams(SAMPLE);state.isSample=true;}
       try{const rows=JSON.parse(localStorage.getItem(userStorageKey(AUDIT_KEY))||'[]');if(Array.isArray(rows))state.audit=rows.slice(0,80);}catch(_e){}
     }
     function render(){
@@ -154,31 +154,45 @@ import { clampInt, pointsFor, gamesPlayed, rankTeams, validateTeams } from './sc
       if(!state.user || !state.tournamentId || !supabase) return;
       if(state.saving){clearTimeout(saveTimer);saveTimer=setTimeout(saveCloud,650);return;}
       state.saving=true;
-      setSync('','Bulutga saqlanmoqda','O‘zgarishlar serverga yuborilmoqda…');
+      setSync('','Bulutga saqlanmoqda','O‘zgarishlar yagona tranzaksiyada yuborilmoqda…');
       try{
         const validation=validateTeams(state.teams);
         if(!validation.valid) throw new Error(validation.errors.join(' '));
-        const title=state.title.trim().length>=2?state.title.trim():'Turnir jadvali';
-        const tournamentUpdate=await supabase.from('bilet023_tournaments').update({
-          title,region:state.region,event_date:state.eventDate||null,description:state.description,
-          updated_at:new Date().toISOString()
-        }).eq('id',state.tournamentId);
-        if(tournamentUpdate.error) throw tournamentUpdate.error;
-        for(const team of state.teams){
-          const payload={team_name:team.name.trim(),wins:clampInt(team.wins),draws:clampInt(team.draws),losses:clampInt(team.losses),sort_order:team.sort_order};
-          const result=team.id && !String(team.id).startsWith('team-') && !String(team.id).startsWith('local-')
-            ? await supabase.from('bilet023_teams').update(payload).eq('id',team.id)
-            : await supabase.from('bilet023_teams').insert({...payload,tournament_id:state.tournamentId}).select().single();
-          if(result.error) throw result.error;
-          if(result.data && result.data.id) team.id=result.data.id;
+        const {data,error}=await supabase.rpc('bilet023_save_tournament',{
+          p_tournament_id:state.tournamentId,
+          p_expected_revision:state.revision,
+          p_title:state.title.trim().length>=2?state.title.trim():'Turnir jadvali',
+          p_region:state.region||'',
+          p_event_date:state.eventDate||null,
+          p_description:state.description||'',
+          p_teams:state.teams.map(team=>({
+            id:team.id && !String(team.id).startsWith('team-') && !String(team.id).startsWith('local-') ? team.id : null,
+            revision:Number(team.revision)||1,
+            team_name:team.name.trim(),
+            wins:clampInt(team.wins),
+            draws:clampInt(team.draws),
+            losses:clampInt(team.losses),
+            sort_order:team.sort_order
+          }))
+        });
+        if(error) throw error;
+        if(!data || !Number.isFinite(Number(data.revision)) || !Array.isArray(data.teams)) {
+          throw new Error('Server saqlash javobi noto‘g‘ri formatda.');
         }
+        state.revision=Number(data.revision);
+        const savedByOrder=new Map(data.teams.map(team=>[Number(team.sort_order),team]));
+        state.teams=state.teams.map(team=>{
+          const saved=savedByOrder.get(Number(team.sort_order));
+          if(!saved) throw new Error('Server javobida jamoa identifikatori topilmadi.');
+          return {...team,id:saved.id,revision:Number(saved.revision)||1};
+        });
         state.isSample=false;localSave();
         setSync('good','Server bilan sinxronlangan','Hisob: '+state.user.email);
         await loadAudit();
       }catch(error){
         console.error('Cloud save failed',error);
-        setSync('bad','Bulutga saqlashda xato',error.message||'Ulanishni tekshiring.');
-        showToast('Serverga saqlash amalga oshmadi. Mahalliy nusxa saqlandi.');
+        setSync('bad','Saqlash to‘xtatildi',error.message||'Tarmoq yoki ma’lumotlarni tekshiring.');
+        showToast(error.message||'Serverga saqlash amalga oshmadi. Mahalliy nusxa saqlandi.');
       }finally{state.saving=false;}
     }
     async function loadAudit(){
@@ -194,7 +208,7 @@ import { clampInt, pointsFor, gamesPlayed, rankTeams, validateTeams } from './sc
       if(!supabase || !state.user) return;
       setSync('','Bulutdan yuklanmoqda','Shaxsiy turnir ma’lumotlari olinmoqda…');
       try{
-        let {data:tournaments,error}=await supabase.from('bilet023_tournaments').select('id,title,region,event_date,description,status,updated_at,owner_id').eq('owner_id',state.user.id).order('updated_at',{ascending:false}).limit(1);
+        let {data:tournaments,error}=await supabase.from('bilet023_tournaments').select('id,title,region,event_date,description,status,updated_at,owner_id,revision').eq('owner_id',state.user.id).order('updated_at',{ascending:false}).limit(1);
         if(error) throw error;
         let tournament=tournaments && tournaments[0];
         let memberRole='owner';
@@ -203,7 +217,7 @@ import { clampInt, pointsFor, gamesPlayed, rankTeams, validateTeams } from './sc
           if(memberError && memberError.code!=='42P01') throw memberError;
           if(members?.length){
             const membership=members[0];memberRole=membership.role;
-            const found=await supabase.from('bilet023_tournaments').select('id,title,region,event_date,description,status,updated_at,owner_id').eq('id',membership.tournament_id).maybeSingle();
+            const found=await supabase.from('bilet023_tournaments').select('id,title,region,event_date,description,status,updated_at,owner_id,revision').eq('id',membership.tournament_id).maybeSingle();
             if(found.error) throw found.error;tournament=found.data;
           }
         }
@@ -214,7 +228,7 @@ import { clampInt, pointsFor, gamesPlayed, rankTeams, validateTeams } from './sc
           const {data:membership,error:membershipError}=await supabase.from('bilet023_members').select('role').eq('tournament_id',tournament.id).eq('user_id',state.user.id).maybeSingle();
           if(membershipError) throw membershipError;memberRole=membership?.role||'viewer';
         }
-        state.tournamentId=tournament.id;state.title=tournament.title||'Turnir jadvali';
+        state.tournamentId=tournament.id;state.title=tournament.title||'Turnir jadvali';state.revision=Number(tournament.revision)||1;
         state.region=tournament.region||'';state.eventDate=tournament.event_date||'';state.description=tournament.description||'';state.status=tournament.status||'draft';state.role=memberRole;
         let {data:teams,error:teamError}=await supabase.from('bilet023_teams').select('*').eq('tournament_id',tournament.id).order('sort_order');
         if(teamError) throw teamError;
@@ -223,7 +237,7 @@ import { clampInt, pointsFor, gamesPlayed, rankTeams, validateTeams } from './sc
           const inserted=await supabase.from('bilet023_teams').insert(payload).select('*').order('sort_order');
           if(inserted.error) throw inserted.error;teams=inserted.data;
         }
-        state.teams=teams.slice(0,4).map(t=>({id:t.id,name:t.team_name,wins:clampInt(t.wins),draws:clampInt(t.draws),losses:clampInt(t.losses),sort_order:t.sort_order}));
+        state.teams=teams.slice(0,4).map(t=>({id:t.id,name:t.team_name,wins:clampInt(t.wins),draws:clampInt(t.draws),losses:clampInt(t.losses),sort_order:t.sort_order,revision:Number(t.revision)||1}));
         if(state.teams.length!==4) throw new Error('Turnirda aynan 4 ta jamoa bo‘lishi kerak.');
         state.isSample=false;render();
         setSync('good','Server bilan sinxronlangan','Hisob: '+state.user.email);
@@ -239,11 +253,11 @@ import { clampInt, pointsFor, gamesPlayed, rankTeams, validateTeams } from './sc
       if(!supabase) return;
       state.isReadOnly=true;state.role='viewer';
       try{
-        const {data:tournament,error}=await supabase.from('bilet023_tournaments').select('id,title,region,event_date,description,status,updated_at').eq('id',tournamentId).eq('status','published').maybeSingle();
+        const {data:tournament,error}=await supabase.from('bilet023_tournaments').select('id,title,region,event_date,description,status,updated_at,revision').eq('id',tournamentId).eq('status','published').maybeSingle();
         if(error) throw error;if(!tournament) throw new Error('Ommaviy turnir topilmadi yoki hali e’lon qilinmagan.');
         const {data:teams,error:teamError}=await supabase.from('bilet023_teams').select('*').eq('tournament_id',tournament.id).order('sort_order');
         if(teamError) throw teamError;
-        state.tournamentId=tournament.id;state.title=tournament.title||'Turnir jadvali';state.region=tournament.region||'';state.eventDate=tournament.event_date||'';state.description=tournament.description||'';state.status=tournament.status;state.teams=(teams||[]).map(t=>({id:t.id,name:t.team_name,wins:clampInt(t.wins),draws:clampInt(t.draws),losses:clampInt(t.losses),sort_order:t.sort_order}));
+        state.tournamentId=tournament.id;state.title=tournament.title||'Turnir jadvali';state.revision=Number(tournament.revision)||1;state.region=tournament.region||'';state.eventDate=tournament.event_date||'';state.description=tournament.description||'';state.status=tournament.status;state.teams=(teams||[]).map(t=>({id:t.id,name:t.team_name,wins:clampInt(t.wins),draws:clampInt(t.draws),losses:clampInt(t.losses),sort_order:t.sort_order}));
         render();setSync('good','Ommaviy jadval','Faqat o‘qish rejimi');document.getElementById('authButton').style.display='none';
       }catch(error){setSync('bad','Ommaviy jadval ochilmadi',error.message||'Tekshirishda xato.');showToast(error.message||'Jadval ochilmadi.');}
     }
@@ -259,8 +273,12 @@ import { clampInt, pointsFor, gamesPlayed, rankTeams, validateTeams } from './sc
     async function togglePublication(){
       if(!canManage()||!supabase||!state.tournamentId){showToast('E’lon qilish uchun Owner yoki Administrator hisobi kerak.');return;}
       const next=state.status==='published'?'draft':'published';
-      const update=await supabase.from('bilet023_tournaments').update({status:next,published_at:next==='published'?new Date().toISOString():null,updated_at:new Date().toISOString()}).eq('id',state.tournamentId);
+      const update=await supabase.from('bilet023_tournaments')
+        .update({status:next,published_at:next==='published'?new Date().toISOString():null})
+        .eq('id',state.tournamentId).eq('revision',state.revision).select('revision').maybeSingle();
       if(update.error){showToast('Holatni yangilashda xato: '+update.error.message);return;}
+      if(!update.data){showToast('Musobaqa holati boshqa foydalanuvchi tomonidan o‘zgartirilgan. Yangilang va qayta urinib ko‘ring.');return;}
+      state.revision=Number(update.data.revision)||state.revision+1;
       state.status=next;localSave();renderMeta();await loadAudit();
       showToast(next==='published'?'Jadval ommaga e’lon qilindi.':'Ommaviy e’lon bekor qilindi.');
     }
