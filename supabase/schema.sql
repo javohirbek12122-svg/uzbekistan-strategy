@@ -344,15 +344,7 @@ begin
         using errcode = '22023';
     end if;
 
-    if coalesce(v_item->>'id','') ~* '^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}
-grant insert,update,delete on public.bilet023_tournaments,public.bilet023_teams to authenticated;
-grant select,insert,update,delete on public.bilet023_members to authenticated;
-grant select on public.bilet023_audit_log to authenticated;
-revoke insert,update,delete on public.bilet023_audit_log from anon,authenticated;
-
-comment on table public.bilet023_members is 'Bilet 023 role map: admin, operator, auditor, viewer.';
-comment on table public.bilet023_audit_log is 'Append-only server audit log; normal clients have read-only access by RLS.';
- then
+    if nullif(v_item->>'id','') is not null then
       v_team_id := (v_item->>'id')::uuid;
       v_expected_team_revision := coalesce((v_item->>'revision')::bigint,1);
 
