@@ -1,0 +1,13 @@
+{
+  "name": "Bilet 023 — Turnir boshqaruv platformasi",
+  "short_name": "Bilet 023",
+  "lang": "uz",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f4f7fa",
+  "theme_color": "#101c2c",
+  "icons": [
+    { "src": "./icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
