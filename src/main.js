@@ -280,39 +280,6 @@ import { clampInt, pointsFor, gamesPlayed, rankTeams, validateTeams } from './sc
       if(error){showToast('Rol biriktirilmadi: '+error.message);return;}
       document.getElementById('memberUserId').value='';recordAudit('Foydalanuvchi roli yangilandi',role);showToast('Foydalanuvchi roli biriktirildi.');
     }
-    function openAuth(){{
-      if(!supabase || !state.user) return;
-      setSync('','Bulutdan yuklanmoqda','Shaxsiy turnir ma’lumotlari olinmoqda…');
-      try{
-        let {data:tournaments,error}=await supabase.from('bilet023_tournaments').select('id,title,updated_at').order('updated_at',{ascending:false}).limit(1);
-        if(error) throw error;
-        let tournament=tournaments && tournaments[0];
-        if(!tournament){
-          const created=await supabase.from('bilet023_tournaments').insert({owner_id:state.user.id,title:state.title}).select().single();
-          if(created.error) throw created.error;
-          tournament=created.data;
-        }
-        state.tournamentId=tournament.id; state.title=tournament.title||'Turnir jadvali';
-        let {data:teams,error:teamError}=await supabase.from('bilet023_teams').select('*').eq('tournament_id',tournament.id).order('sort_order');
-        if(teamError) throw teamError;
-        if(!teams || teams.length===0){
-          const payload=state.teams.map((t,i)=>({tournament_id:tournament.id,team_name:t.name||('Jamoa '+(i+1)),wins:clampInt(t.wins),draws:clampInt(t.draws),losses:clampInt(t.losses),sort_order:i+1}));
-          const inserted=await supabase.from('bilet023_teams').insert(payload).select('*').order('sort_order');
-          if(inserted.error) throw inserted.error;
-          teams=inserted.data;
-        }
-        state.teams=teams.slice(0,4).map(t=>({id:t.id,name:t.team_name,wins:clampInt(t.wins),draws:clampInt(t.draws),losses:clampInt(t.losses),sort_order:t.sort_order}));
-        if(state.teams.length!==4) throw new Error('Turnirda 4 ta jamoa bo‘lishi kerak. Supabase jadvalidagi jamoalar sonini tekshiring.');
-        state.isSample=false;
-        render();
-        setSync('good','Bulut bilan sinxronlangan','Hisob: '+state.user.email);
-        document.getElementById('authButton').textContent='Hisobdan chiqish ↗';
-      }catch(error){
-        console.error('Cloud load failed',error);
-        setSync('bad','Bulutdan yuklab bo‘lmadi',error.message||'Qurilmadagi ma’lumot saqlanadi.');
-        showToast('Bulut bilan ulanish xatosi: '+(error.message||'noma’lum xato'));
-      }
-    }
     function openAuth(){document.getElementById('authModal').classList.add('open');document.getElementById('authEmail').focus();}
     function closeAuth(){document.getElementById('authModal').classList.remove('open');}
     function setAuthMode(mode){
