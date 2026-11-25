@@ -79,6 +79,7 @@ import { clampInt, pointsFor, gamesPlayed, rankTeams, validateTeams } from './sc
       dot.className='status-dot'+(mode==='good'?' good':mode==='bad'?' bad':'');
     }
     function localSave(){
+      if(state.isReadOnly) return;
       try{ localStorage.setItem(userStorageKey(STORAGE_KEY),JSON.stringify({title:state.title,region:state.region,eventDate:state.eventDate,description:state.description,status:state.status,revision:state.revision,teams:state.teams,isSample:state.isSample})); }
       catch(error){ setSync('bad','Saqlash cheklangan','Brauzer xotirasiga yozib bo‘lmadi.'); }
     }
@@ -253,7 +254,7 @@ import { clampInt, pointsFor, gamesPlayed, rankTeams, validateTeams } from './sc
       if(!supabase) return;
       state.isReadOnly=true;state.role='viewer';
       try{
-        const {data:tournament,error}=await supabase.from('bilet023_tournaments').select('id,title,region,event_date,description,status,updated_at,revision').eq('id',tournamentId).eq('status','published').maybeSingle();
+        const {data:tournament,error}=await supabase.from('bilet023_public_tournaments').select('id,title,region,event_date,description,status,updated_at,revision').eq('id',tournamentId).eq('status','published').maybeSingle();
         if(error) throw error;if(!tournament) throw new Error('Ommaviy turnir topilmadi yoki hali e’lon qilinmagan.');
         const {data:teams,error:teamError}=await supabase.from('bilet023_teams').select('*').eq('tournament_id',tournament.id).order('sort_order');
         if(teamError) throw teamError;
