@@ -1,0 +1,22 @@
+{
+  "name": "bilet023-turnir-platformasi",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Bilet 023 turnir ochkolari platformasi",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "node --test src/*.test.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "2.119.2"
+  },
+  "devDependencies": {
+    "vite": "7.2.2"
+  }
+}
