@@ -188,7 +188,7 @@ drop trigger if exists bilet023_teams_audit on public.bilet023_teams;
 create trigger bilet023_teams_audit after insert or update or delete on public.bilet023_teams
 for each row execute function public.bilet023_write_audit();
 drop trigger if exists bilet023_tournaments_audit on public.bilet023_tournaments;
-create trigger bilet023_tournaments_audit after update on public.bilet023_tournaments
+create trigger bilet023_tournaments_audit after insert or update on public.bilet023_tournaments
 for each row execute function public.bilet023_write_audit();
 drop trigger if exists bilet023_members_audit on public.bilet023_members;
 create trigger bilet023_members_audit after insert or update or delete on public.bilet023_members
@@ -271,7 +271,7 @@ begin
       using errcode = '22023';
   end if;
 
-  if jsonb_typeof(p_teams) <> 'array' or jsonb_array_length(p_teams) <> 4 then
+  if p_teams is null or jsonb_typeof(p_teams) <> 'array' or jsonb_array_length(p_teams) <> 4 then
     raise exception 'Turnirda aynan 4 ta jamoa bo‘lishi kerak.'
       using errcode = '22023';
   end if;
