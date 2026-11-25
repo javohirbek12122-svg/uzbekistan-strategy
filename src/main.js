@@ -2,9 +2,6 @@ import { createClient } from '@supabase/supabase-js';
 import { clampInt, pointsFor, gamesPlayed, rankTeams, validateTeams } from './scoring.mjs';
 
 
-    import { createClient } from '@supabase/supabase-js';
-    import { clampInt, pointsFor, gamesPlayed, rankTeams, validateTeams } from './scoring.mjs';
-
     const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || '';
     const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || '';
     const STORAGE_KEY = 'bilet023-turnir-v2';
@@ -26,9 +23,9 @@ import { clampInt, pointsFor, gamesPlayed, rankTeams, validateTeams } from './sc
     function points(t){ return pointsFor(t); }
     function played(t){ return gamesPlayed(t); }
     function ranked(){ return rankTeams(state.teams); }
-    function canEdit(){ return !state.isReadOnly && (!state.user || ['owner','admin','operator'].includes(state.role)); }
+    function canEdit(){ return !state.isReadOnly && (!state.user || ['owner','admin'].includes(state.role) || (state.role==='operator' && state.status!=='published')); }
     function canManage(){ return !state.isReadOnly && (!state.user ? false : ['owner','admin'].includes(state.role)); }
-    function canAudit(){ return !state.user || ['owner','admin','auditor'].includes(state.role); }
+    function canAudit(){ return !state.isReadOnly && (!state.user || ['owner','admin','auditor'].includes(state.role)); }
     function recordAudit(action,detail){
       const entry={id:crypto.randomUUID?crypto.randomUUID():String(Date.now()),action,detail:String(detail||''),at:new Date().toISOString(),actor:state.user?.email||'Mahalliy foydalanuvchi'};
       state.audit=[entry,...state.audit].slice(0,80);
@@ -317,7 +314,7 @@ import { clampInt, pointsFor, gamesPlayed, rankTeams, validateTeams } from './sc
       if(!supabase) return;
       const {error}=await supabase.auth.signOut();
       if(error){showToast(error.message);return;}
-      state.user=null;state.tournamentId=null;
+      state.user=null;state.tournamentId=null;state.role='local_owner';state.isReadOnly=false;
       loadLocal();render();
       setSync('','Qurilmada saqlanmoqda','Mehmon rejimi · ma’lumotlar shu brauzerda');
       document.getElementById('authButton').textContent='Bulutga ulanish ↗';
@@ -377,12 +374,14 @@ import { clampInt, pointsFor, gamesPlayed, rankTeams, validateTeams } from './sc
       if(!SUPABASE_URL || !SUPABASE_KEY){
         supabase=null;
         setSync('','Mahalliy sinov rejimi','Alohida Supabase bazasi ulanmagan. Bulut funksiyasi o‘chiq.');
+        const authButton=document.getElementById('authButton');if(authButton){authButton.disabled=true;authButton.textContent='Bulut sozlanmagan';authButton.classList.add('btn-disabled');}
         return;
       }
       try{
         supabase=createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
         const publicId=new URLSearchParams(window.location.search).get('tournament');
         if(publicId){await loadPublic(publicId);return;}
+        const authButton=document.getElementById('authButton');if(authButton){authButton.disabled=false;authButton.classList.remove('btn-disabled');authButton.textContent='Bulutga ulanish ↗';}
         const {data,error}=await supabase.auth.getSession();if(error)throw error;
         if(data.session && data.session.user){state.user=data.session.user;await loadCloud();}
         else setSync('','Qurilmada saqlanmoqda','Mehmon rejimi · bulut uchun hisobga kiring');
